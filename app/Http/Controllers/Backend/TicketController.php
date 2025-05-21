@@ -29,7 +29,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-@if($user->hasRole('Super Admin'))
+if($user->hasRole('Super Admin'))
         {
 $tickets = Ticket::all();
 }else{            $tickets = Ticket::where('user_id', Auth::id())->get();
