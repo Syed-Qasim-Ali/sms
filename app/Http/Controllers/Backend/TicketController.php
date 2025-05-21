@@ -306,6 +306,9 @@ class TicketController extends Controller
         ]);
 
         // Send Email to truck owner
+        if ($truck instanceof \Illuminate\Database\Eloquent\Collection) {
+            $truck = $truck->first();
+        }
         Mail::to($user->email)->send(new TruckInvitationMail($truck));
 
         return response()->json([

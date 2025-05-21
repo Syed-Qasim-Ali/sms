@@ -12,6 +12,7 @@ use App\Models\Ticket;
 use App\Models\Trailer;
 use App\Models\Truck;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -55,13 +56,13 @@ class HomeController extends Controller
         return view('backend.notification.index');
     }
 
-    public function pendingorder()
-    {
-        $threshold = Carbon::now()->subMinutes(5); // 5 minutes pehle ka time
-        $deleted = OrderDetails::where('status', 'pending')
-            ->where('created_at', '<', $threshold)
-            ->delete();
+    // public function pendingorder()
+    // {
+    //     $threshold = Carbon::now()->subMinutes(5); // 5 minutes pehle ka time
+    //     $deleted = OrderDetails::where('status', 'pending')
+    //         ->where('created_at', '<', $threshold)
+    //         ->delete();
 
-        $this->info("$deleted pending truck records deleted.");
-    }
+    //     $this->info("$deleted pending truck records deleted.");
+    // }
 }
