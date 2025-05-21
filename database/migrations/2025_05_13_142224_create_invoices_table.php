@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number')->nullable()->after('uuid');
+            $table->string('order_number')->nullable();
             $table->string('invoice_number')->unique();
             $table->decimal('total_amount');
             $table->string('payment_status')->default('pending');
