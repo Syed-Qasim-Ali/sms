@@ -106,6 +106,12 @@
                                                                         class="btn btn-primary btn-sm">
                                                                         <i class="fas fa-eye"></i> Show
                                                                     </a>
+                                                                    @if ($ticket->status == 'admin-review')
+                                                                        <a href="{{ route('tickets.edit', $ticket->uuid) }}"
+                                                                            class="btn btn-primary btn-sm">
+                                                                            <i class="fas fa-pen"></i> Edit
+                                                                        </a>
+                                                                    @endif
                                                                 </div>
                                                             </td>
                                                         </tr>
