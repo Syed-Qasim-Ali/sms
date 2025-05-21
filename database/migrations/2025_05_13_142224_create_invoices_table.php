@@ -15,7 +15,6 @@ return new class extends Migration {
             // $table->foreignId('ticket_id')->constrained();
             $table->string('invoice_number')->unique();
             $table->decimal('total_amount');
-            $table->integer('adjusted_minutes')->default(0);
             $table->string('payment_status')->default('pending');
             $table->timestamps();
         });

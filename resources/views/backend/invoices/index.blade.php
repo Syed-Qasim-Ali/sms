@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-md-6 text-end">
                     <div class="balance-box">
-                        Balance Due: {{ $orders->quantity * $orders->pay_rate }}
+                        Balance Due: ${{ $orders->quantity * $orders->pay_rate }}
                     </div>
                     <?php
                     use Carbon\Carbon;

@@ -136,7 +136,8 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::post('/deny/{uuid}', [TicketController::class, 'ticketresponsedeny'])->name('deny');
 
     //Invoices Management
-    Route::get('invoices/{order_number}', [InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices/{invoice_id}', [InvoiceController::class, 'show'])->name('invoices.show');
+    Route::post('/tickets/generate-invoice', [InvoiceController::class, 'generateInvoice'])->name('tickets.generate-invoice');
     Route::get('ticket-list/{order_number}', [TicketController::class, 'order_tickets'])->name('orders-view');
 
 
