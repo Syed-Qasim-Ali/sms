@@ -33,8 +33,9 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h2>Tickets Management</h2>
-                                                <a href="" {{-- <a href="{{ url('invoices/' . $orderno) }}" --}} class="btn btn-success btn-sm"><i
-                                                        class="fas fa-file-invoice"></i>
+                                                {{-- @dd($tickets) --}}
+                                                <a id="invoice-btn" href="" {{-- <a href="{{ route('invoices.index', $orderno) }}" --}}
+                                                    class="btn btn-success btn-sm "><i class="fas fa-file-invoice"></i>
                                                     Generate
                                                     Invoice</a>
                                             </div>
@@ -59,7 +60,7 @@
                                             <table class="table datatable" style="width: 100%">
                                                 <thead>
                                                     <tr>
-                                                        {{-- <th><input type="checkbox" id="select-all"></th> --}}
+                                                        <th><input type="checkbox" id="select-all"></th>
                                                         <th>S.N</th>
                                                         <th>Order Number</th>
                                                         <th>Status</th>
@@ -69,11 +70,13 @@
                                                 <tbody>
                                                     @foreach ($tickets as $ticket)
                                                         <tr>
-                                                            {{-- <td>
-                                                                <input type="checkbox" class="ticket-checkbox"
-                                                                    name="selected_orders[]"
-                                                                    value="{{ $ticket->order_number }}">
-                                                            </td> --}}
+                                                            <td>
+                                                                @if ($ticket->status == 'closed' || $ticket->invoice_id)
+                                                                    <input type="checkbox" class="ticket-checkbox"
+                                                                        name="selected_orders[]"
+                                                                        value="{{ $ticket->order_number }}">
+                                                                @endif
+                                                            </td>
                                                             <td>{{ $loop->iteration }}</td>
                                                             <td>{{ $ticket->order_number }}</td>
                                                             <td>{{ $ticket->status }}</td>
@@ -105,7 +108,7 @@
             </div>
         </section>
     </div>
-    {{-- <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const selectAllCheckbox = document.getElementById('select-all');
             const checkboxes = document.querySelectorAll('.ticket-checkbox');
@@ -114,6 +117,8 @@
             function toggleInvoiceButton() {
                 const anyChecked = document.querySelectorAll('.ticket-checkbox:checked').length > 0;
                 invoiceBtn.style.display = anyChecked ? 'inline-block' : 'none';
+                // console.log(anyChecked);
+
             }
 
             // Select all logic
@@ -123,14 +128,15 @@
                 });
                 toggleInvoiceButton(); // <-- this is important
             });
+            toggleInvoiceButton(); // <-- this is important
 
             // Individual checkbox logic
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', toggleInvoiceButton);
             });
         });
-    </script> --}}
-    {{-- <script>
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.ticket-checkbox');
             const invoiceBtn = document.getElementById('invoice-btn');
@@ -142,5 +148,5 @@
 
             checkboxes.forEach(cb => cb.addEventListener('change', toggleInvoiceButton));
         });
-    </script> --}}
+    </script>
 @endsection

@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,9 +12,11 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ticket_id')->constrained();
+            // $table->foreignId('ticket_id')->constrained();
+            $table->string('invoice_number')->unique();
             $table->decimal('total_amount');
-            $table->enum('payment_status', ['pending', 'paid']);
+            $table->integer('adjusted_minutes')->default(0);
+            $table->string('payment_status')->default('pending');
             $table->timestamps();
         });
     }

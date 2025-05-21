@@ -24,7 +24,7 @@ use Illuminate\View\View;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::middleware(['Spatie\Permission\Middleware\RoleMiddleware:super-admin'])->group(function () {
@@ -32,7 +32,8 @@ Route::middleware(['Spatie\Permission\Middleware\RoleMiddleware:super-admin'])->
         $user = User::findOrFail($id);
         if (Auth::user()->hasRole('super-admin')) {
             session(['impersonated_by' => Auth::user()->id]);
-            Auth::user()->impersonate($user);
+            $userModel = $user instanceof \Illuminate\Support\Collection ? $user->first() : $user;
+            Auth::user()->impersonate($userModel);
         } else {
             return redirect('/home')->with('error', 'You do not have permission to impersonate.');
         }
@@ -135,7 +136,7 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
     Route::post('/deny/{uuid}', [TicketController::class, 'ticketresponsedeny'])->name('deny');
 
     //Invoices Management
-    Route::get('invoices/{order_number}', [InvoiceController::class, 'index']);
+    Route::get('invoices/{order_number}', [InvoiceController::class, 'index'])->name('invoices.index');
     Route::get('ticket-list/{order_number}', [TicketController::class, 'order_tickets'])->name('orders-view');
 
 
