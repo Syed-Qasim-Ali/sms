@@ -18,17 +18,12 @@ class InvoiceController extends Controller
      */
     public function show($invoice_id)
     {
-        // Retrieve the invoice by ID
         $invoice = Invoice::findOrFail($invoice_id);
-
-        // Retrieve the associated order based on the invoice's order_number
+        // dd($invoice->ticket);
         $orders = Order::with('tickets')->where('order_number', $invoice->order_number)->first();
 
-        // Retrieve the job details related to the order
-        $job = Job::findOrFail($orders->job_id);
-
-        // Pass the data to the view
-        return view('backend.invoices.show', compact('invoice', 'orders', 'job'));
+        $job = Job::findOrFail($orders->job);
+        return view('backend.invoices.index', compact('invoice', 'orders', 'job'));
     }
 
     public function generateInvoice(Request $request)
@@ -44,12 +39,13 @@ class InvoiceController extends Controller
 
         // Calculate total amount based on tickets
         $totalAmount = $tickets->sum(fn($ticket) => $ticket->order->quantity * $ticket->order->pay_rate);
-
+        // dd($tickets->first()->order_number);
         // Create invoice
         $invoice = Invoice::create([
             'invoice_number' => 'INV-' . uniqid(),
             'total_amount' => $totalAmount,
-            'payment_status' => 'pending'
+            'payment_status' => 'pending',
+            'order_number' => $tickets->first()->order_number,
         ]);
 
         // Update each ticket with the new invoice ID

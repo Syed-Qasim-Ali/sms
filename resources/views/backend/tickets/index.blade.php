@@ -132,19 +132,19 @@
     <script>
         let isGenerating = false; // flag to indicate invoice generation is in progress
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.getElementById('select-all');
-            const checkboxes = document.querySelectorAll('.ticket-checkbox');
-            const invoiceBtn = document.getElementById('invoice-btn');
-
-            function toggleInvoiceButton() {
-                const anyChecked = document.querySelectorAll('.ticket-checkbox:checked').length > 0;
-                invoiceBtn.style.display = anyChecked ? 'inline-block' : 'none';
-                // Only enable/disable button if not currently generating an invoice
-                if (!isGenerating) {
-                    invoiceBtn.disabled = !anyChecked;
-                }
+        function toggleInvoiceButton() {
+            const anyChecked = document.querySelectorAll('.ticket-checkbox:checked').length > 0;
+            invoiceBtn.style.display = anyChecked ? 'inline-block' : 'none';
+            // Only enable/disable button if not currently generating an invoice
+            if (!isGenerating) {
+                invoiceBtn.disabled = !anyChecked;
             }
+        }
+        const selectAllCheckbox = document.getElementById('select-all');
+        const checkboxes = document.querySelectorAll('.ticket-checkbox');
+        const invoiceBtn = document.getElementById('invoice-btn');
+        document.addEventListener('DOMContentLoaded', function() {
+
 
             selectAllCheckbox.addEventListener('change', function() {
                 checkboxes.forEach(checkbox => {
@@ -192,6 +192,7 @@
                         isGenerating = false;
                         // Call toggleInvoiceButton to re-enable the button based on checkbox state
                         toggleInvoiceButton();
+                        console.log('data', data);
 
                         if (data.success) {
                             window.location.href = data.invoice_url; // Redirect to invoice page

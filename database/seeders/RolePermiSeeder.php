@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -83,11 +84,25 @@ class RolePermiSeeder extends Seeder
         // $siteContact->givePermissionTo(['jobs-list', 'orders-list']);
 
         // Assign super-admin role to user ID 1
-        $user = User::find(1);
-        if ($user) {
-            $user->assignRole('Super Admin');
+
+        $adminuser = User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('12345678'),
+            'status' => 'active',
+            'email_verified_at' => now(),
+        ]);
+        if ($adminuser) {
+            $adminuser->assignRole('Super Admin');
         } else {
             $this->command->warn('User with ID 1 not found.');
         }
+        $user = User::create([
+            'name' => 'driver',
+            'email' => 'driver@gmail.com',
+            'status' => 'active',
+            'password' => bcrypt('12345678')
+        ]);
+        $user->assignRole('Trucking Contractor Driver');
     }
 }
