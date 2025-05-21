@@ -132,38 +132,6 @@
                                                         </div>
                                                     </div>
 
-                                                    <div class="row mt-3">
-                                                        <!-- Capabilities -->
-                                                        <div class="col-md-6">
-                                                            <label for="capabilities"
-                                                                class="form-label fw-bold">Capabilities</label>
-                                                            <select class="form-control select2" id="capabilities"
-                                                                name="capabilities[]" multiple>
-                                                                @foreach ($capabilities as $capability)
-                                                                    <option value="{{ $capability->id }}"
-                                                                        {{ in_array($capability->id, old('capabilities', $selectedCapabilities ?? [])) ? 'selected' : '' }}>
-                                                                        {{ $capability->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-
-                                                        <!-- Specialties -->
-                                                        <div class="col-md-6">
-                                                            <label for="specialties"
-                                                                class="form-label fw-bold">Specialties</label>
-                                                            <select class="form-control select2" id="specialties"
-                                                                name="specialties[]" multiple>
-                                                                @foreach ($specialties as $specialty)
-                                                                    <option value="{{ $specialty->id }}"
-                                                                        {{ in_array($specialty->id, old('specialties', $selectedSpecialties ?? [])) ? 'selected' : '' }}>
-                                                                        {{ $specialty->name }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-                                                    </div>
-
                                                     <div class="row mt-4">
                                                         <div class="col-md-6">
                                                             <!-- Start Location -->
@@ -205,8 +173,8 @@
                                                     <div class="row mt-3">
                                                         <div class="col-md-6">
                                                             <div class="d-flex justify-content-between align-items-center">
-                                                                <label class="form-label fw-bold">Site Contact <span
-                                                                        class="text-danger">*</span></label>
+                                                                <label class="form-label fw-bold">Site Contact
+                                                                    <span class="text-danger">*</span></label>
                                                                 <button class="btn btn-outline-secondary btn-sm"
                                                                     type="button" onclick="addContact()">+</button>
                                                             </div>
@@ -424,7 +392,8 @@
                 return;
             }
 
-            let searchQuery = `${query}, Karachi, Pakistan`;
+            let country = "USA"; // or dynamically set this based on user or app config
+            let searchQuery = `${query}, ${country}`;
             let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}`;
 
             fetch(url)

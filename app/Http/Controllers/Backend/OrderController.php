@@ -189,22 +189,14 @@ class OrderController extends Controller
      */
     public function edit(string $id)
     {
-        $orders = Order::with('ordercapacity', 'orderspecialty', 'ordersitecontact', 'ordertimeslot')->findOrFail($id);
+        $orders = Order::with('ordersitecontact', 'ordertimeslot')->findOrFail($id);
         $companies = Company::all();
         $jobs = Job::all();
-        $capabilities = Capability::all();
-        $specialties = Specialty::all();
-        $selectedCapabilities = $orders->ordercapacity ? $orders->ordercapacity->pluck('capability')->toArray() : [];
-        $selectedSpecialties = $orders->orderspecialty ? $orders->orderspecialty->pluck('specialty')->toArray() : [];
-        return view('backend.orders.edit', compact(
+              return view('backend.orders.edit', compact(
             'orders',
             'companies',
             'jobs',
-            'capabilities',
-            'specialties',
-            'selectedCapabilities',
-            'selectedSpecialties'
-        ));
+                    ));
     }
 
     /**

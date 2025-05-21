@@ -119,9 +119,9 @@
                                                                             class="fa-solid fa-pen-to-square"></i></a>
                                                                 @endcan
                                                                 {{-- @can('orders-edit') --}}
-                                                                <a class="btn btn-primary btn-sm mb-2"
+                                                                {{-- <a class="btn btn-primary btn-sm mb-2"
                                                                     href="{{ route('orders-view', $order->order_number) }}">
-                                                                    <i class="fa-solid fa-eye"></i></a>
+                                                                    <i class="fa-solid fa-eye"></i></a> --}}
                                                                 {{-- @endcan --}}
                                                                 @can('orders-delete')
                                                                     <form method="POST"
