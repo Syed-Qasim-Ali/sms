@@ -209,7 +209,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            @if ($status->status !== 'under_review')
+                                                            @if ($status->status !== 'admin_review')
                                                                 <button type="button" class="btn btn-success w-100 mt-3"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#submitTicketModal">
