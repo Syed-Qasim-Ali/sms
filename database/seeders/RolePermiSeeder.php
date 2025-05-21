@@ -92,6 +92,7 @@ class RolePermiSeeder extends Seeder
         $user = User::create([
             'name' => 'driver',
             'email' => 'driver@gmail.com',
+            'status' => 'active',
             'password' => bcrypt('12345678')
         ]);
         $user->assignRole('Trucking Contractor Driver');
