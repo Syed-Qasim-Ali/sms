@@ -16,7 +16,10 @@ class Ticket extends Model
     {
         return $this->belongsTo(Company::class);
     }
-
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'order_number', 'order_number');
+    }
     public function eventpickdrop()
     {
         return $this->hasMany(EventPickDrop::class, 'ticket_uuid', 'uuid');

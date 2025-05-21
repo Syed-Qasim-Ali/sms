@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
-    protected $fillable = [
-        'invoice_number',
-        'total_amount',
-        'payment_status'
-    ];
+    protected $guarded = [];
 
     public function tickets()
     {
         return $this->hasMany(Ticket::class);
+    }
+    public function ticket()
+    {
+        return $this->hasOne(Ticket::class);
     }
 }
