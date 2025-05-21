@@ -77,7 +77,7 @@
                                                 </div>
                                             @endif
 
-                                            <table class="table datatable" style="width: 100%">
+                                            <table id="ticketsTable" class="table table-striped" style="width: 100%">
                                                 <thead>
                                                     <tr>
                                                         <th><input type="checkbox" id="select-all"></th>
@@ -213,5 +213,15 @@
                 alert('Please select at least one ticket');
             }
         }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#ticketsTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+            });
+        });
     </script>
 @endsection
