@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Invoice;
 use App\Models\Job;
 use App\Models\Order;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,21 +16,53 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($order_number)
+    public function show($invoice_id)
     {
-   
-        $orders = Order::with('tickets')->where('order_number', $order_number)->first();
-        $job = Job::where('id', $orders->job)->first();
-        $totalAmount = $orders->quantity * $orders->pay_rate;
-        return view('backend.invoices.index', compact('orders', 'job', 'totalAmount'));
+        // Retrieve the invoice by ID
+        $invoice = Invoice::findOrFail($invoice_id);
+
+        // Retrieve the associated order based on the invoice's order_number
+        $orders = Order::with('tickets')->where('order_number', $invoice->order_number)->first();
+
+        // Retrieve the job details related to the order
+        $job = Job::findOrFail($orders->job_id);
+
+        // Pass the data to the view
+        return view('backend.invoices.show', compact('invoice', 'orders', 'job'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function generateInvoice(Request $request)
     {
-        //
+        $request->validate([
+            'tickets' => 'required|array',
+            'tickets.*' => 'exists:tickets,uuid'
+        ]);
+        $selectedTicketsUUID = $request->input('tickets');
+        // dd($selectedTicketsUUID);
+        // Find tickets by UUIDs
+        $tickets = Ticket::whereIn('uuid', $selectedTicketsUUID)->get();
+
+        // Calculate total amount based on tickets
+        $totalAmount = $tickets->sum(fn($ticket) => $ticket->order->quantity * $ticket->order->pay_rate);
+
+        // Create invoice
+        $invoice = Invoice::create([
+            'invoice_number' => 'INV-' . uniqid(),
+            'total_amount' => $totalAmount,
+            'payment_status' => 'pending'
+        ]);
+
+        // Update each ticket with the new invoice ID
+        foreach ($tickets as $ticket) {
+            $ticket->invoice_id = $invoice->id;
+            $ticket->save();
+        }
+
+        // Return response with the invoice URL to redirect to
+        return response()->json([
+            'success' => true,
+            'invoice_url' => route('invoices.show', $invoice->id)
+        ]);
     }
 
     /**
@@ -39,13 +73,7 @@ class InvoiceController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.

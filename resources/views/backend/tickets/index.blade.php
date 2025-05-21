@@ -1,5 +1,9 @@
 @extends('backend.layout.app')
-
+<style>
+    #loading-spinner {
+        margin-left: 10px;
+    }
+</style>
 @section('content')
     <div class="col-md-10">
         <section class="main-sec">
@@ -10,7 +14,7 @@
                             <div class="pagetitle">
                                 <nav>
                                     <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="{{ url('/home') }}">Home</a></li>
+                                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
                                         <li class="breadcrumb-item">Tables</li>
                                         <li class="breadcrumb-item active">Tickets</li>
                                     </ol>
@@ -33,12 +37,28 @@
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <h2>Tickets Management</h2>
-                                                {{-- @dd($tickets) --}}
-                                                <a id="invoice-btn" href="" {{-- <a href="{{ route('invoices.index', $orderno) }}" --}}
-                                                    class="btn btn-success btn-sm "><i class="fas fa-file-invoice"></i>
-                                                    Generate
-                                                    Invoice</a>
+                                                <button id="invoice-btn" class="btn btn-success btn-sm"
+                                                    style="display: none" onclick="generateInvoice()">
+                                                    <i class="fas fa-file-invoice"></i> Generate Invoice
+                                                    <span id="loading-spinner"
+                                                        class="spinner-border spinner-border-sm text-light"
+                                                        style="display: none;" role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </span>
+
+                                                </button>
+                                                {{-- <a id="invoice-btn" href="#" class="btn btn-success btn-sm"
+                                                    style="display: none" onclick="generateInvoice()">
+                                                    <i class="fas fa-file-invoice"></i> Generate Invoice
+                                                    <span id="loading-spinner"
+                                                        class="spinner-border spinner-border-sm text-light"
+                                                        style="display: none;" role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </span>
+                                                </a> --}}
+
                                             </div>
+
                                             @session('success')
                                                 <div class="alert alert-success" role="alert">
                                                     {{ $value }}
@@ -74,7 +94,7 @@
                                                                 @if ($ticket->status == 'closed' || $ticket->invoice_id)
                                                                     <input type="checkbox" class="ticket-checkbox"
                                                                         name="selected_orders[]"
-                                                                        value="{{ $ticket->order_number }}">
+                                                                        value="{{ $ticket->uuid }}">
                                                                 @endif
                                                             </td>
                                                             <td>{{ $loop->iteration }}</td>
@@ -108,7 +128,10 @@
             </div>
         </section>
     </div>
+
     <script>
+        let isGenerating = false; // flag to indicate invoice generation is in progress
+
         document.addEventListener('DOMContentLoaded', function() {
             const selectAllCheckbox = document.getElementById('select-all');
             const checkboxes = document.querySelectorAll('.ticket-checkbox');
@@ -117,36 +140,78 @@
             function toggleInvoiceButton() {
                 const anyChecked = document.querySelectorAll('.ticket-checkbox:checked').length > 0;
                 invoiceBtn.style.display = anyChecked ? 'inline-block' : 'none';
-                // console.log(anyChecked);
-
+                // Only enable/disable button if not currently generating an invoice
+                if (!isGenerating) {
+                    invoiceBtn.disabled = !anyChecked;
+                }
             }
 
-            // Select all logic
             selectAllCheckbox.addEventListener('change', function() {
                 checkboxes.forEach(checkbox => {
                     checkbox.checked = this.checked;
                 });
-                toggleInvoiceButton(); // <-- this is important
+                toggleInvoiceButton();
             });
-            toggleInvoiceButton(); // <-- this is important
+            toggleInvoiceButton();
 
-            // Individual checkbox logic
             checkboxes.forEach(function(checkbox) {
                 checkbox.addEventListener('change', toggleInvoiceButton);
             });
         });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('.ticket-checkbox');
-            const invoiceBtn = document.getElementById('invoice-btn');
 
-            function toggleInvoiceButton() {
-                const anyChecked = Array.from(checkboxes).some(cb => cb.checked);
-                invoiceBtn.style.display = anyChecked ? 'inline-block' : 'none';
+        // Function to send the selected ticket UUIDs to the controller and generate invoice
+        function generateInvoice() {
+            let selectedTickets = [];
+            document.querySelectorAll('.ticket-checkbox:checked').forEach((checkbox) => {
+                selectedTickets.push(checkbox.value);
+            });
+
+            if (selectedTickets.length > 0) {
+                isGenerating = true; // disable invoice button until process completes
+
+                // Show loading spinner and disable the button
+                document.getElementById('loading-spinner').style.display = 'inline-block';
+                document.getElementById('invoice-btn').disabled = true;
+
+                // Send the selected tickets' UUIDs to the controller
+                fetch("{{ route('tickets.generate-invoice') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            tickets: selectedTickets
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Hide loading spinner and enable the button accordingly
+                        document.getElementById('loading-spinner').style.display = 'none';
+                        document.getElementById('invoice-btn').disabled = false;
+                        isGenerating = false;
+                        // Call toggleInvoiceButton to re-enable the button based on checkbox state
+                        toggleInvoiceButton();
+
+                        if (data.success) {
+                            window.location.href = data.invoice_url; // Redirect to invoice page
+                        } else {
+                            alert('Something went wrong!');
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('invoice-btn').disabled = false;
+
+                        // Hide loading spinner and enable the button in case of error
+                        document.getElementById('loading-spinner').style.display = 'none';
+                        isGenerating = false;
+                        toggleInvoiceButton();
+                        console.error('Error:', error);
+                        alert('An error occurred while generating the invoice. Please try again.');
+                    });
+            } else {
+                alert('Please select at least one ticket');
             }
-
-            checkboxes.forEach(cb => cb.addEventListener('change', toggleInvoiceButton));
-        });
+        }
     </script>
 @endsection

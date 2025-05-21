@@ -30,11 +30,7 @@ class TicketController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-if($user->hasRole('Super Admin'))
-        {
-$tickets = Ticket::all();
-}else{            $tickets = Ticket::where('user_id', Auth::id())->get();
-        }
+        $tickets = ($user->hasRole('Super Admin')) ? Ticket::all() : Ticket::where('user_id', Auth::id())->get();
         return view('backend.tickets.index', compact('tickets'))->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
