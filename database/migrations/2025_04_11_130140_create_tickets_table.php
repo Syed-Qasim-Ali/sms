@@ -21,7 +21,7 @@ return new class extends Migration
                 ->on('orders')
                 ->onDelete('cascade');
             $table->foreignId('time_slot_id')->constrained('order_time_slot')->onDelete('cascade');
-            $table->enum('status', ['pending', 'under_review', 'closed', 'open'])->default('pending');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

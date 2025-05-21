@@ -26,7 +26,7 @@ return new class extends Migration
             $table->dateTime('pickup_time')->nullable();
             $table->dateTime('drop_time')->nullable();
 
-            $table->string('status')->default('pending'); // Example default status
+      $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
 
             $table->timestamps();
         });

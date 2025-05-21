@@ -85,6 +85,15 @@
                                                                     </a>
                                                                 </div>
                                                             </td>
+                                                            {{-- @if() --}}
+                                                            <td>
+                                                                <div class="d-flex gap-2">
+                                                                    <a href="{{ route('tickets.show', $ticket->uuid) }}"
+                                                                        class="btn btn-primary btn-sm">
+                                                                        <i class="fas fa-eye"></i> Show
+                                                                    </a>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 </tbody>

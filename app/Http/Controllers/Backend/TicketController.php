@@ -28,9 +28,12 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
-        $tickets = Ticket::where('user_id', Auth::id())
-            ->whereIn('status', ['open', 'rejected', 'closed'])
-            ->get();
+        $user = Auth::user();
+@if($user->hasRole('Super Admin'))
+        {
+$tickets = Ticket::all();
+}else{            $tickets = Ticket::where('user_id', Auth::id())->get();
+        }
         return view('backend.tickets.index', compact('tickets'))->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
@@ -338,7 +341,7 @@ class TicketController extends Controller
     public function submitticket($ticket_uuid)
     {
         $ticket = Ticket::where('uuid', $ticket_uuid)->first();
-        $ticket->status = 'under_review';
+        $ticket->status = 'admin_review';
         $ticket->save();
 
         // Fetch site contact number from order
@@ -373,7 +376,7 @@ class TicketController extends Controller
 
         //     $client->messages->create($receiverNumber, [
         //         'from' => $twilio_number,
-        //         'body' => "Ticket: {$ticket->uuid} Has Been submitted for your review staging. {{$url}}"
+        //         'body' => "Ticket: {$ticket->uuid} Has Been submitted for your review staging. {{ $url }}"
         //     ]);
 
         return redirect()->back()->with('success', 'The status is successfully changed to under_review');
@@ -408,26 +411,57 @@ class TicketController extends Controller
         return view('backend.urls.index', compact('ticket', 'user'));
     }
 
-    public function ticketresponse($uuid)
-    {
-        $ticket = Ticket::where('uuid', $uuid)->first();
-        $ticket->status = 'closed';
-        $ticket->save();
+    public function ticketresponse(Request $request, $uuid)
+{
+    return request->all();
+    $request->validate([
+        'pickup_time' => 'required|date',
+        'drop_time' => 'required|date|after_or_equal:pickup_time',
+        'tolls' => 'nullable|numeric',
+        'images.*' => 'nullable|image|max:2048',
+    ]);
 
-        $event = EventPickDrop::where('ticket_uuid', $uuid)->first();
+    $ticket = Ticket::with('eventpickdrop')->where('uuid', $uuid)->firstOrFail();
+    $event = $ticket->eventpickdrop->first();
+
+    if ($event) {
+        // Conditionally update pickup and drop times
+        if ($event->pickup_time != $request->pickup_time) {
+            $event->pickup_time = $request->pickup_time;
+        }
+        if ($event->drop_time != $request->drop_time) {
+            $event->drop_time = $request->drop_time;
+        }
+
         $event->status = 'approved';
         $event->save();
 
-        $backlog = Backlog::where('truck_id', $ticket->truck_id)
-            ->first();
+        // Update tolls and ticket status
+        if ($request->filled('tolls')) {
+            $ticket->tolls = $request->tolls;
+        }
+        $ticket->status = 'closed';
+        $ticket->save();
 
+        // Handle image uploads (store all in ticket_images table)
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('pickup/images', 'public');
 
+                // Store in ticket_images table (if you're using it)
+                TicketImage::create([
+                    'ticket_id' => $ticket->id,
+                    'image_path' => $path,
+                ]);
+            }
+        }
 
+        // Handle backlog
+        $backlog = Backlog::where('truck_id', $ticket->truck_id)->first();
         if ($backlog) {
-
-            $uuid = (string) Str::uuid();
-            $order = Ticket::create([
-                'uuid' => $uuid,
+            $newUuid = (string) Str::uuid();
+            Ticket::create([
+                'uuid' => $newUuid,
                 'user_id' => $ticket->user_id,
                 'truck_id' => $backlog->truck_id,
                 'order_number' => $backlog->order_number,
@@ -437,8 +471,11 @@ class TicketController extends Controller
             $backlog->delete();
         }
 
-        return redirect()->back()->with('success', 'Your response has been saved!');
+        return back()->with('success', 'Your response has been saved!');
     }
+
+    return back()->with('error', 'No event found.');
+}
 
     public function ticketresponsedeny()
     {
