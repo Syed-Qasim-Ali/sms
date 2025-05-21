@@ -89,15 +89,19 @@
         <!-- Buttons -->
         <div class="btn-container">
             @if ($ticket->eventpickdrop->first()->status === 'pending')
-                <form action="{{ route('response', $ticket->uuid) }}" method="post" style="display:inline;">
-                    @csrf
-                    <button class="btn btn-success btn-lg px-5" type="submit">Approve</button>
-                </form>
-                <form action="{{ route('deny', $ticket->uuid) }}" method="post" style="display:inline;">
-                    @csrf
-                    <input type="hidden" name="status" value="denied">
-                    <button class="btn btn-danger btn-lg px-5" type="submit">Deny</button>
-                </form>
+                @if ($ticket->status === 'user_review')
+                    <form action="{{ route('response', $ticket->uuid) }}" method="post" style="display:inline;">
+                        @csrf
+                        <button class="btn btn-success btn-lg px-5" type="submit">Approve</button>
+                    </form>
+                    <form action="{{ route('deny', $ticket->uuid) }}" method="post" style="display:inline;">
+                        @csrf
+                        <input type="hidden" name="status" value="denied">
+                        <button class="btn btn-danger btn-lg px-5" type="submit">Deny</button>
+                    </form>
+                @else
+                    <p class="mt-3 text-success h5">The Ticket is Under Admin Review</p>
+                @endif
             @else
                 <p class="mt-3 text-success h5">Thanks for submitting your response</p>
             @endif

@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
 use Twilio\Rest\Client;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TicketImage; 
 
 
 class TicketController extends Controller
@@ -105,16 +106,61 @@ $tickets = Ticket::all();
      */
     public function edit(string $id)
     {
-        //
+     $ticket = Ticket::where('uuid', $id)->first();
+
+        if (!$ticket) {
+            return back()->with('error', 'Ticket not found.');
+        }
+        return view('backend.tickets.edit', compact('ticket'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
+   public function update(Request $request, string $uuid)
+{
+       // Validate the request
+    $request->validate([
+        'pickup_time' => 'required|date',
+        'drop_time' => 'required|date|after_or_equal:pickup_time',
+        'tolls' => 'nullable|numeric',
+        'images.*' => 'nullable|image|max:2048',
+    ]);
+
+    $ticket = Ticket::with('eventpickdrop')->where('uuid', $uuid)->firstOrFail();
+    $event = $ticket->eventpickdrop->first();
+
+    if ($event) {
+        // Update only if changed
+        if ($event->pickup_time != $request->pickup_time) {
+            $event->pickup_time = $request->pickup_time;
+        }
+        if ($event->drop_time != $request->drop_time) {
+            $event->drop_time = $request->drop_time;
+        }
+        $event->save();
     }
+
+    // Handle uploaded images
+    if ($request->hasFile('images')) {
+        foreach ($request->file('images') as $image) {
+            $path = $image->store('pickup/images', 'public');
+            TicketImage::create([
+                'ticket_id' => $uuid,
+                'image_path' => $path,
+            ]);
+        }
+    }
+
+    // Update tolls if provided
+    if ($request->filled('tolls')) {
+        $ticket->tolls = $request->tolls;
+    }
+$ticket->status = 'user_review';
+    $ticket->save();
+
+    return redirect()->route('tickets.index')->with('success', 'Ticket updated successfully!');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -416,49 +462,15 @@ $tickets = Ticket::all();
 
     public function ticketresponse(Request $request, $uuid)
 {
-    return request->all();
-    $request->validate([
-        'pickup_time' => 'required|date',
-        'drop_time' => 'required|date|after_or_equal:pickup_time',
-        'tolls' => 'nullable|numeric',
-        'images.*' => 'nullable|image|max:2048',
-    ]);
-
-    $ticket = Ticket::with('eventpickdrop')->where('uuid', $uuid)->firstOrFail();
+      $ticket = Ticket::with('eventpickdrop')->where('uuid', $uuid)->firstOrFail();
     $event = $ticket->eventpickdrop->first();
-
-    if ($event) {
-        // Conditionally update pickup and drop times
-        if ($event->pickup_time != $request->pickup_time) {
-            $event->pickup_time = $request->pickup_time;
-        }
-        if ($event->drop_time != $request->drop_time) {
-            $event->drop_time = $request->drop_time;
-        }
-
         $event->status = 'approved';
         $event->save();
 
-        // Update tolls and ticket status
-        if ($request->filled('tolls')) {
-            $ticket->tolls = $request->tolls;
-        }
-        $ticket->status = 'closed';
+              $ticket->status = 'closed';
         $ticket->save();
 
-        // Handle image uploads (store all in ticket_images table)
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('pickup/images', 'public');
-
-                // Store in ticket_images table (if you're using it)
-                TicketImage::create([
-                    'ticket_id' => $ticket->id,
-                    'image_path' => $path,
-                ]);
-            }
-        }
-
+     
         // Handle backlog
         $backlog = Backlog::where('truck_id', $ticket->truck_id)->first();
         if ($backlog) {
@@ -475,9 +487,6 @@ $tickets = Ticket::all();
         }
 
         return back()->with('success', 'Your response has been saved!');
-    }
-
-    return back()->with('error', 'No event found.');
 }
 
     public function ticketresponsedeny()
