@@ -92,10 +92,8 @@
 
                                                             <!-- Spacer -->
                                                             <div class="mt-3">
-                                                                <input type="hidden" name="pickup_lat" id="location_lat"
-                                                                    value="40.65269989999999">
-                                                                <input type="hidden" name="pickup_lng" id="location_lng"
-                                                                    value="-73.9542887">
+                                                                <input type="text" name="pickup_lat" id="location_lat">
+                                                                <input type="text" name="pickup_lng" id="location_lng">
                                                             </div>
 
 

@@ -56,11 +56,11 @@
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <h2>Order To Assign</h2>
                                     </div>
-                                    @if (session('success'))
+                                    @session('success')
                                         <div class="alert alert-success" role="alert">
-                                            {{ session('success') }}
+                                            {{ $value }}
                                         </div>
-                                    @endif
+                                    @endsession
 
                                     @if (count($errors) > 0)
                                         <div class="alert alert-danger">

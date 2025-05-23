@@ -85,10 +85,10 @@
                                                                     @csrf
 
                                                                     <!-- Hidden fields to store user's current lat/lng -->
-                                                                    <input type="hidden" name="location_lat"
-                                                                        id="location_lat" value="40.65269989999999">
-                                                                    <input type="hidden" name="location_lng"
-                                                                        id="location_lng" value="-73.9542887">
+                                                                    <input type="text" name="location_lat"
+                                                                        id="location_lat">
+                                                                    <input type="text" name="location_lng"
+                                                                        id="location_lng">
 
                                                                     <button type="submit"
                                                                         class="btn btn-success btn-lg w-100 mt-3"
@@ -111,78 +111,102 @@
             </div>
         </section>
     </div>
-
     <script
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHuiMaFjSnFTQfRmAfTp9nZ9VpTICgNrc&callback=initMap&libraries=marker"
-        async defer loading="async"></script>
-    <script>
-        function initMap() {
-            const startLat = parseFloat("{{ $order->start_location_lat ?? '0' }}");
-            const startLng = parseFloat("{{ $order->start_location_lng ?? '0' }}");
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHuiMaFjSnFTQfRmAfTp9nZ9VpTICgNrc&callback=initMap&v=weekly&libraries=marker"
+        defer></script>
 
+    <script>
+        async function initMap() {
+            /* 1 — import the advanced-marker classes */
+            const {
+                AdvancedMarkerElement,
+                PinElement
+            } =
+            await google.maps.importLibrary("marker"); /* docs: turn0search2 */
+
+            /* 2 — static pickup location that came from Laravel */
             const startLocation = {
-                lat: startLat,
-                lng: startLng
+                lat: {{ $order->start_location_lat ?? 0 }},
+                lng: {{ $order->start_location_lng ?? 0 }}
             };
 
+            /* 3 — build the map (mapId is required for advanced markers) */
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 14,
                 center: startLocation,
+                mapId: "DEMO_MAP_ID" /* replace with a real map-style ID */
             });
 
-            const directionsService = new google.maps.DirectionsService();
-            const directionsRenderer = new google.maps.DirectionsRenderer({
-                map
-            });
-
-            new google.maps.Marker({
+            /* 4 — marker at the pickup point */
+            new AdvancedMarkerElement({
+                /* migration guide: turn0search9 */
                 map,
                 position: startLocation,
                 title: "Pickup Location"
             });
 
+            /* 5 — prepare directions objects */
+            const directionsService = new google.maps.DirectionsService(); /* turn0search1 */
+            const directionsRenderer = new google.maps.DirectionsRenderer({
+                map
+            });
+
+            /* 6 — helper to draw the blue route line */
+            function drawRoute(origin) {
+                directionsService.route({
+                    origin,
+                    destination: startLocation,
+                    travelMode: google.maps.TravelMode.DRIVING
+                }, (res, status) => {
+                    if (status === "OK") directionsRenderer.setDirections(res);
+                });
+            }
+
+            /* 7 — helper to stash coords into the hidden fields */
+            function setHiddenInputs(lat, lng) {
+                document.getElementById("location_lat").value = lat;
+                document.getElementById("location_lng").value = lng;
+            }
+
+            /* 8 — default user marker so something shows even if geolocation fails */
+            let userMarker = new AdvancedMarkerElement({
+                map,
+                position: {
+                    lat: 40.653,
+                    lng: -73.9545
+                }, // Brooklyn fallback
+                title: "Your Location",
+                content: new PinElement({
+                    background: "#4285F4",
+                    glyph: "🧍" /* any emoji or glyph you like */
+                }).element
+            });
+
+            /* 9 — ask the browser for the real position */
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    const userLat = position.coords.latitude;
-                    const userLng = position.coords.longitude;
-
-                    // ✅ Fill input fields
-                    document.getElementById('location_lat').value = userLat;
-                    document.getElementById('location_lng').value = userLng;
-
-                    const userLocation = {
-                        lat: userLat,
-                        lng: userLng
+                /* MDN: turn0search3 */
+                navigator.geolocation.getCurrentPosition(pos => {
+                    const here = {
+                        lat: pos.coords.latitude,
+                        lng: pos.coords.longitude
                     };
-
-                    // Add marker
-                    new google.maps.Marker({
-                        map,
-                        position: userLocation,
-                        title: "Your Location",
-                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-                    });
-
-                    // Draw route
-                    directionsService.route({
-                        origin: userLocation,
-                        destination: startLocation,
-                        travelMode: google.maps.TravelMode.DRIVING,
-                    }, function(response, status) {
-                        if (status === "OK") {
-                            directionsRenderer.setDirections(response);
-                        } else {
-                            console.error("Route failed:", status);
-                        }
-                    });
-
-                }, function(error) {
-                    // alert("Location access denied or unavailable.");
-                    console.error("Geo Error:", error);
+                    userMarker.position = here; // move marker
+                    map.setCenter(here);
+                    setHiddenInputs(here.lat, here.lng); // fill the hidden <input>s
+                    drawRoute(here); // draw the blue line & ETA
+                }, err => {
+                    /* error codes: turn0search14 */
+                    console.error(err);
+                    drawRoute(userMarker.position); // still show a route
+                    setHiddenInputs(userMarker.position.lat, userMarker.position.lng);
                 });
             } else {
-                alert("Geolocation is not supported by this browser.");
+                // Geolocation not supported
+                drawRoute(userMarker.position);
+                setHiddenInputs(userMarker.position.lat, userMarker.position.lng);
             }
         }
     </script>
+
+
 @endsection

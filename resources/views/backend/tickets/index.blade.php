@@ -91,7 +91,7 @@
                                                     @foreach ($tickets as $ticket)
                                                         <tr>
                                                             <td>
-                                                                @if ($ticket->status == 'closed' || $ticket->invoice_id)
+                                                                @if ($ticket->status == 'closed' && $ticket->invoice_id)
                                                                     <input type="checkbox" class="ticket-checkbox"
                                                                         name="selected_orders[]"
                                                                         value="{{ $ticket->uuid }}">

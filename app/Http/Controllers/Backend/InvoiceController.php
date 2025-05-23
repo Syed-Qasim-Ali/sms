@@ -94,4 +94,11 @@ class InvoiceController extends Controller
     {
         //
     }
+
+    public function ShowDetails($invoice_id)
+    {
+                $invoice = Invoice::findOrFail($invoice_id);
+              $orders = Order::with('tickets')->where('order_number', $invoice->order_number)->first();
+          return view('backend.invoices.detail', compact('invoice', 'orders'));
+    }
 }
