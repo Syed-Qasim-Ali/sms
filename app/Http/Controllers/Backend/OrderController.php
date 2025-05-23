@@ -348,9 +348,7 @@ class OrderController extends Controller
     {
         $order = Order::where('id', $id)->firstOrFail();
         $order->delete();
-        OrderCapability::where('order_number', $order->order_number)->delete();
-        OrderSpecialty::where('order_number', $order->order_number)->delete();
-        OrderTimeSlot::where('order_number', $order->order_number)->delete();
+               OrderTimeSlot::where('order_number', $order->order_number)->delete();
         OrderSiteContact::where('order_number', $order->order_number)->delete();
         Ticket::where('order_number', $order->order_number)->delete();
         return redirect()->route('orders.index')->with('success', 'Order and related data deleted successfully!');

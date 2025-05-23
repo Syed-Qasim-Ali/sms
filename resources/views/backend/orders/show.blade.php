@@ -220,48 +220,12 @@
                         buttonRef.style.display = 'none';
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    toastr.error('❌ An error occurred while sending the invitation.');
-                })
                 .finally(() => {
                     // Hide loader
                     document.getElementById("fullscreenLoader").style.display = "none";
                 });
         }
     </script>
-
-    {{-- <script>
-        // Function to call when button is clicked
-        function assignTruckFromBacklog() {
-            console.log('Checking Backlog');
-            toastr.info('Assigning truck from backlog...');
-
-            fetch('/assign-from-backlog', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Response:', data);
-                    if (data.message) {
-                        toastr.success(data.message);
-                    } else {
-                        toastr.error('❌ Something went wrong!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    toastr.error('❌ Error assigning truck.');
-                });
-        }
-
-        // Trigger the function every 5 seconds (5000ms)
-        setInterval(assignTruckFromBacklog, 5000);
-    </script> --}}
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHuiMaFjSnFTQfRmAfTp9nZ9VpTICgNrc&callback=initMap" async
         defer></script>

@@ -85,10 +85,10 @@
                                                                     @csrf
 
                                                                     <!-- Hidden fields to store user's current lat/lng -->
-                                                                    <input type="text" name="location_lat"
-                                                                        id="location_lat">
-                                                                    <input type="text" name="location_lng"
-                                                                        id="location_lng">
+                                                                    <input type="hidden" name="location_lat"
+                                                                        id="location_lat" value="40.65269989999999">
+                                                                    <input type="hidden" name="location_lng"
+                                                                        id="location_lng" value="-73.9542887">
 
                                                                     <button type="submit"
                                                                         class="btn btn-success btn-lg w-100 mt-3"
@@ -114,22 +114,15 @@
 
     <script
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHuiMaFjSnFTQfRmAfTp9nZ9VpTICgNrc&callback=initMap&libraries=marker"
-        async defer></script>
+        async defer loading="async"></script>
     <script>
         function initMap() {
             const startLat = parseFloat("{{ $order->start_location_lat ?? '0' }}");
             const startLng = parseFloat("{{ $order->start_location_lng ?? '0' }}");
-            const pickupAddress = @json($order->start_location ?? 'No address available');
 
             const startLocation = {
                 lat: startLat,
                 lng: startLng
-            };
-
-            // Manual current location for local testing
-            const userLocation = {
-                lat: 40.653, // Brooklyn
-                lng: -73.9545
             };
 
             const map = new google.maps.Map(document.getElementById("map"), {
@@ -142,82 +135,54 @@
                 map
             });
 
-            // Marker for pickup
-            const pickupMarker = new google.maps.Marker({
-                map: map,
+            new google.maps.Marker({
+                map,
                 position: startLocation,
                 title: "Pickup Location"
             });
 
-            // const pickupInfoWindow = new google.maps.InfoWindow({
-            //     // content: `<strong>Pickup Location:</strong><br>${pickupAddress}`
-            // });
-            // pickupInfoWindow.open(map, pickupMarker);
-
-            // Marker for current location
-            const userMarker = new google.maps.Marker({
-                map: map,
-                position: userLocation,
-                title: "Your Location",
-                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-            });
-
-            // const userInfoWindow = new google.maps.InfoWindow({
-            //     content: `<strong>Your Location</strong>`
-            // });
-            // userInfoWindow.open(map, userMarker);
-
-            // Calculate & draw route
-            directionsService.route({
-                origin: userLocation,
-                destination: startLocation,
-                travelMode: google.maps.TravelMode.DRIVING,
-            }, function(response, status) {
-                if (status === "OK") {
-                    directionsRenderer.setDirections(response);
-
-                    // Show distance and duration
-                    const leg = response.routes[0].legs[0];
-                    const distance = leg.distance.text;
-                    const duration = leg.duration.text;
-
-                    const routeInfo = `<strong>Distance:</strong> ${distance}<br><strong>ETA:</strong> ${duration}`;
-                    const midLat = (userLocation.lat + startLocation.lat) / 2;
-                    const midLng = (userLocation.lng + startLocation.lng) / 2;
-
-                    // const routeInfoWindow = new google.maps.InfoWindow({
-                    //     content: routeInfo,
-                    //     position: {
-                    //         lat: midLat,
-                    //         lng: midLng
-                    //     }
-                    // });
-                    // routeInfoWindow.open(map);
-                } else {
-                    console.error("Directions request failed: " + status);
-                }
-            });
-
-            // ============================
-            // Uncomment below for real user location
-            // ============================
-            /*
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    // ✅ Fill input fields
+                    document.getElementById('location_lat').value = userLat;
+                    document.getElementById('location_lng').value = userLng;
+
                     const userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
+                        lat: userLat,
+                        lng: userLng
                     };
-                    drawRoute(userLocation);
-                }, function() {
-                    alert("Geolocation failed or permission denied.");
-                    drawRoute(defaultUserLocation); // fallback
+
+                    // Add marker
+                    new google.maps.Marker({
+                        map,
+                        position: userLocation,
+                        title: "Your Location",
+                        icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                    });
+
+                    // Draw route
+                    directionsService.route({
+                        origin: userLocation,
+                        destination: startLocation,
+                        travelMode: google.maps.TravelMode.DRIVING,
+                    }, function(response, status) {
+                        if (status === "OK") {
+                            directionsRenderer.setDirections(response);
+                        } else {
+                            console.error("Route failed:", status);
+                        }
+                    });
+
+                }, function(error) {
+                    // alert("Location access denied or unavailable.");
+                    console.error("Geo Error:", error);
                 });
             } else {
-                alert("Geolocation not supported.");
-                drawRoute(defaultUserLocation); // fallback
+                alert("Geolocation is not supported by this browser.");
             }
-            */
         }
     </script>
 @endsection
