@@ -187,7 +187,7 @@
                         @foreach ($orders->tickets as $ticket)
                             <tr>
                                 <td>
-                                    <a href="{{ route('invoices.details', $invoice->invoice_id) }}">
+                                    <a href="{{ route('invoices.details', $ticket->uuid) }}">
                                         {{ $ticket->uuid }}
                                     </a>
                                 </td>

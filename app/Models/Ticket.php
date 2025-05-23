@@ -24,4 +24,14 @@ class Ticket extends Model
     {
         return $this->hasMany(EventPickDrop::class, 'ticket_uuid', 'uuid');
     }
+
+    public function ticket_assign()
+    {
+        return $this->hasMany(TicketAssign::class, 'ticket_id', 'uuid');
+    }
+
+    public function users_arrival()
+    {
+        return $this->hasMany(UsersArrival::class, 'ticket_uuid', 'uuid');
+    }
 }
