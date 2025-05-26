@@ -192,8 +192,8 @@
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('PUT')
-                                                                <input type="text" name="drop_lat" id="drop_lat">
-                                                                <input type="text" name="drop_lng" id="drop_lng">
+                                                                <input type="hidden" name="drop_lat" id="drop_lat">
+                                                                <input type="hidden" name="drop_lng" id="drop_lng">
                                                                 <button type="submit"
                                                                     class="btn btn-success rounded-circle"
                                                                     style="position: absolute; bottom: 15px; right: 15px; z-index: 10;">
