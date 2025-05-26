@@ -135,6 +135,8 @@ Route::middleware(['auth', CheckUserStatus::class])->group(function () {
 
     Route::post('/deny/{uuid}', [TicketController::class, 'ticketresponsedeny'])->name('deny');
 
+    Route::post('tollsubmit/{uuid}', [OrderController::class, 'tollsubmit'])->name('toll.submit'); 
+
     //Invoices Management
     Route::get('/invoices/{invoice_id}', [InvoiceController::class, 'show'])->name('invoices.show');
     Route::get('/invoices/details/{invoice_id}', [InvoiceController::class, 'ShowDetails'])->name('invoices.details');

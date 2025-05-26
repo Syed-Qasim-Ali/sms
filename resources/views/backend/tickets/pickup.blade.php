@@ -100,8 +100,44 @@
                                                                 <button type="submit" class="btn btn-primary">No</button>
                                                             </form>
                                                             <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Yes</button>
+                                                                data-bs-target="#tollModal" data-bs-toggle="modal"
+                                                                data-bs-dismiss="modal">
+                                                                Yes
+                                                            </button>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Toll submit Modal -->
+                                            <div class="modal fade" id="tollModal" tabindex="-1"
+                                                aria-labelledby="tollModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form
+                                                            action="{{ route('toll.submit', $pickuplatlng->ticket_uuid) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="tollModalLabel">Enter Toll
+                                                                    Amount</h5>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="mb-3">
+                                                                    <label for="toll" class="form-label">Toll
+                                                                        ($)</label>
+                                                                    <input type="number" step="0.01" name="toll"
+                                                                        class="form-control" id="toll" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-success">Save
+                                                                    Toll</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
