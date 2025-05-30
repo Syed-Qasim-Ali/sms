@@ -115,11 +115,14 @@ class TicketController extends Controller
      */
    public function update(Request $request, string $uuid)
 {
+    // return $request->all();
        // Validate the request
     $request->validate([
         'pickup_time' => 'required|date',
         'drop_time' => 'required|date|after_or_equal:pickup_time',
         'tolls' => 'nullable|numeric',
+          'adjusted_minutes' => 'nullable|numeric',
+        'adjusted_minutes_reason' => 'nullable|string|max:255',
         'images.*' => 'nullable|image|max:2048',
     ]);
 
@@ -152,6 +155,16 @@ class TicketController extends Controller
     if ($request->filled('tolls')) {
         $ticket->tolls = $request->tolls;
     }
+
+      // Update adjustment and reason
+    if ($request->filled('adjusted_minutes')) {
+        $ticket->adjusted_minutes = $request->adjusted_minutes;
+    }
+
+    if ($request->filled('adjusted_minutes_reason')) {
+        $ticket->adjusted_minutes_reason = $request->adjusted_minutes_reason;
+    }
+
 $ticket->status = 'user_review';
     $ticket->save();
 

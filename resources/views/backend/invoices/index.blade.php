@@ -186,7 +186,11 @@
                     <tbody>
                         @foreach ($orders->tickets as $ticket)
                             <tr>
-                                <td>{{ $ticket->uuid }}</td>
+                                <td>
+                                    <a href="{{ route('invoices.details', $ticket->uuid) }}">
+                                        {{ $ticket->uuid }}
+                                    </a>
+                                </td>
                                 <td>{{ $ticket->created_at->format('d-m-Y') }}</td>
                                 <td>${{ $orders->pay_rate }}
                                     {{ ucwords(str_replace('_', ' ', $orders->pay_rate_type)) }}</td>

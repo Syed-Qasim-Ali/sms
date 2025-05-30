@@ -77,11 +77,31 @@
                                                         value="{{ old('drop_time', \Carbon\Carbon::parse($ticket->eventpickdrop->first()->drop_time)->format('Y-m-d\TH:i')) }}">
                                                 </div>
 
+                                                <!-- Adjustment -->
+                                                <div class="mb-3">
+                                                    <label for="adjusted_minutes" class="form-label">Adjustment
+                                                        (Min)</label>
+                                                    <input type="number" name="adjusted_minutes" id="adjusted_minutes"
+                                                        class="form-control" placeholder="Enter Adjustment"
+                                                        value="{{ old('adjusted_minutes', $ticket->adjusted_minutes) }}">
+                                                </div>
+
+                                                <!-- Adjustment Minutes Reason -->
+                                                <div class="mb-3">
+                                                    <label for="adjusted_minutes_reason" class="form-label">Adjustment
+                                                        Reason</label>
+                                                    <input type="text" name="adjusted_minutes_reason"
+                                                        id="adjusted_minutes_reason" class="form-control"
+                                                        placeholder="Enter Adjustment Reason"
+                                                        value="{{ old('adjusted_minutes_reason', $ticket->adjusted_minutes_reason) }}">
+                                                </div>
+
                                                 <!-- Tolls -->
                                                 <div class="mb-3">
-                                                    <label for="tolls" class="form-label">Toll Amount (optional)</label>
+                                                    <label for="tolls" class="form-label">Toll Amount</label>
                                                     <input type="number" name="tolls" id="tolls" class="form-control"
-                                                        placeholder="Enter Toll Amount" value="{{ old('tolls') }}">
+                                                        placeholder="Enter Toll Amount"
+                                                        value="{{ old('tolls', $ticket->tolls) }}">
                                                 </div>
 
                                                 <!-- Upload Images -->

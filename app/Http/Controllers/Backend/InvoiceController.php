@@ -9,7 +9,8 @@ use App\Models\Order;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Truck;
+use App\Models\Company;
 
 class InvoiceController extends Controller
 {
@@ -69,8 +70,6 @@ class InvoiceController extends Controller
         //
     }
 
-
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -93,5 +92,15 @@ class InvoiceController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function ShowDetails($invoice_id)
+    {
+        $ticket = Ticket::with('eventpickdrop', 'ticket_assign', 'users_arrival')->findOrFail($invoice_id);
+          $truck = Truck::with('trailers')->where('id', $ticket->truck_id)->first();
+        $company = Company::where('user_id', $ticket->user_id)->first();
+        // $orders = Order::with('tickets')->where('order_number', $ticket->order_number)->first();
+                 
+          return view('backend.invoices.detail', compact('ticket', 'truck', 'company'));
     }
 }

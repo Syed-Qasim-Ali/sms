@@ -454,4 +454,14 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', 'Order status updated.');
     }
+
+    public function tollsubmit(Request $request, $uuid)
+    {
+$ticket = Ticket::where('uuid', $uuid)->first();
+$ticket->tolls = $request->toll;
+ $ticket->status = 'admin_review';
+        $ticket->save();
+
+   return redirect()->back()->with('success', 'The Toll Added and status is successfully changed to under_review');
+    }
 }

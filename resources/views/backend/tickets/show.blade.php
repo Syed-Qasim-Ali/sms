@@ -85,9 +85,9 @@
                                                                     @csrf
 
                                                                     <!-- Hidden fields to store user's current lat/lng -->
-                                                                    <input type="text" name="location_lat"
+                                                                    <input type="hidden" name="location_lat"
                                                                         id="location_lat">
-                                                                    <input type="text" name="location_lng"
+                                                                    <input type="hidden" name="location_lng"
                                                                         id="location_lng">
 
                                                                     <button type="submit"
