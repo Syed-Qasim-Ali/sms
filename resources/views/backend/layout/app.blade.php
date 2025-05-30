@@ -43,7 +43,7 @@
     <!-- Select2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <title>Dashboard</title>
+    <title>@yield('title', 'Dashboard')</title>
     <style>
         @media (max-width: 768px) {
             .sidebar-wrapper {

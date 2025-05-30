@@ -1,4 +1,5 @@
 @extends('backend.layout.app')
+@section('title', 'Trailer Management')
 @section('content')
     <div class="col-md-10">
         <section class="main-sec">
