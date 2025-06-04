@@ -4,6 +4,7 @@
         margin-left: 10px;
     }
 </style>
+@section('title', 'Tickets Management')
 @section('content')
     <div class="col-md-10">
         <section class="main-sec">

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.6.0/css/all.css">
     <link rel="stylesheet" href="{{ asset('Backend/assets/css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="icon" type="image/x-icon" href="{{ asset('Backend/assets/images/logo-white.png') }}">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -42,7 +43,7 @@
     <!-- Select2 JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
-    <title>Dashboard</title>
+    <title>@yield('title', 'Dashboard')</title>
     <style>
         @media (max-width: 768px) {
             .sidebar-wrapper {
@@ -287,13 +288,13 @@
                                 </li>
                             @endcan
 
-                            @can('reports')
+                            {{-- @can('reports')
                                 <li class="{{ Request::is('reports*') ? 'active' : '' }}">
                                     <a href="#" class="fsli"><img
                                             src="{{ asset('Backend/assets/images/report.png') }}" alt="">
                                         Reports</a>
                                 </li>
-                            @endcan
+                            @endcan --}}
 
                             @can('users-list')
                                 <li class="{{ Request::is('users*') ? 'active' : '' }}"><a
@@ -316,10 +317,10 @@
                     </ul>
                     <div class="settings">
                         <h4>SYSTEM</h4>
-                        <a href="#"><img src="{{ asset('Backend/assets/images/i.png') }}" alt="">Help
+                        {{-- <a href="#"><img src="{{ asset('Backend/assets/images/i.png') }}" alt="">Help
                             Center</a>
                         <a href="#"><img src="{{ asset('Backend/assets/images/setting.png') }}"
-                                alt="">Settings</a>
+                                alt="">Settings</a> --}}
 
                         <a href="#"
                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
