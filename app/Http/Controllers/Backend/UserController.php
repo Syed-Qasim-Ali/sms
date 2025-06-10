@@ -39,11 +39,18 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $data = User::orderBy('id', 'DESC')->get();
+        $user = Auth::user();
+        if ($user->hasRole('Super Admin')) {
+         $data = User::orderBy('id', 'DESC')->get();
         return view('backend.users.index', compact('data'))
             ->with('i', 0);
+        }else{
+        $data = User::where('user_id', $user->id)->orderBy('id', 'DESC')->get();
+        return view('backend.users.index', compact('data'))
+            ->with('i', 0);
+        }
     }
-
+s
     /**
      * Show the form for creating a new resource.
      *
