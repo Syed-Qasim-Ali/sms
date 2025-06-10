@@ -50,7 +50,7 @@ class UserController extends Controller
             ->with('i', 0);
         }
     }
-s
+
     /**
      * Show the form for creating a new resource.
      *
