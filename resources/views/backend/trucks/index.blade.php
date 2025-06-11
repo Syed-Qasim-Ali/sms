@@ -117,15 +117,6 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-                                                    @else
-                                                        <tr>
-                                                            <td colspan="7" class="text-center text-muted">
-                                                                <h5>No Data Available</h5>
-                                                                <p class="mb-0">There are no trucks data available at
-                                                                    the
-                                                                    moment.</p>
-                                                            </td>
-                                                        </tr>
                                                     @endif
                                                 </tbody>
                                             </table>

@@ -46,7 +46,8 @@ class UserController extends Controller
         return view('backend.users.index', compact('data'))
             ->with('i', 0);
         }else{
-        $data = User::where('id', $user->id)->orderBy('id', 'DESC')->get();
+        $data = User::where('w
+        awid', $user->id)->orderBy('id', 'DESC')->get();
         return view('backend.users.index', compact('data'))
             ->with('i', 0);
         }
