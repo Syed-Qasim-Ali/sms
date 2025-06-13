@@ -46,15 +46,6 @@
     <title>@yield('title', 'Dashboard')</title>
     <style>
         @media (max-width: 768px) {
-            .sidebar-wrapper {
-                position: fixed;
-                left: -250px;
-                width: 250px;
-                height: 100%;
-                background: #343a40;
-                transition: left 0.3s ease-in-out;
-                z-index: 1000;
-            }
 
             .sidebar-wrapper.active {
                 left: 0;
@@ -205,138 +196,137 @@
 </head>
 
 <body>
-    <div class="row align-items-start">
-        <div class="col-12 col-md-2 sidebar-col">
-            <div class="sidebar-wrapper">
-                <div class="sidebar" id="sidebar">
-                    <div class="sidebar-logo">
-                        <img src="{{ asset('Backend/assets/images/logo-white.png') }}" alt="">
-                    </div>
-                    <ul>
-                        <div class="First_sec">
-                            <li class="{{ Request::is('home*') ? 'active' : '' }}">
-                                <a href="{{ route('home') }}" class="fsli d-flex align-items-center w-100">
-                                    <img src="{{ asset('Backend/assets/images/dashboard.png') }}" alt="">
-                                    <span class="ms-2">Dashboard</span>
-                                </a>
-                            </li>
-
-                            <li class="{{ Request::is('tickets*') ? 'active' : '' }}">
-                                <a href="{{ route('tickets.index') }}" class="fsli"><img
-                                        src="{{ asset('Backend/assets/images/ticket.png') }}" alt="">
-                                    Tickets</a>
-                            </li>
-
-                            {{-- @can('invoice')
-                                <li class="{{ Request::is('invoices*') ? 'active' : '' }}">
-                                    <a href="#" class="fsli"><img
-                                            src="{{ asset('Backend/assets/images/invoice.png') }}" alt="">
-                                        Invoices</a>
-                                </li>
-                            @endcan --}}
-
-                            {{-- @can('capabilities-list')
-                                <li class="{{ Request::is('capabilities*') ? 'active' : '' }}">
-                                    <a href="{{ route('capabilities.index') }}" class="fsli"><img
-                                            src=" {{ asset('Backend/assets/images/capability.png') }}" alt="">
-                                        Capabilities</a>
-                                </li>
-                            @endcan --}}
-
-                            @can('company-list')
-                                <li class="{{ Request::is('companies*') ? 'active' : '' }}">
-                                    <a href="{{ route('companies.index') }}" class="fsli"><img
-                                            src="{{ asset('Backend/assets/images/companies.png') }}" alt="">
-                                        Companies</a>
-                                </li>
-                            @endcan
-
-                            {{-- @can('specialties-list')
-                                <li class="{{ Request::is('specialties*') ? 'active' : '' }}">
-                                    <a href="{{ route('specialties.index') }}" class="fsli"><img
-                                            src="{{ asset('Backend/assets/images/specialities.png') }}" alt="">
-                                        Specialities</a>
-                                </li>
-                            @endcan --}}
-
-                            @can('trucks-list')
-                                <li class="has-submenu">
-                                    <a href="javascript:void(0)" class="fsli">
-                                        <img src="{{ asset('Backend/assets/images/truck.png') }}" alt="">
-                                        Trucks <span class="submenu-toggle">›</span>
-                                    </a>
-                                    <ul class="submenu">
-                                        <li><a href="{{ route('trucks.index') }}">Manage Trucks</a></li>
-                                        <li><a href="{{ route('trailers.index') }}">Manage Trailers</a></li>
-                                    </ul>
-                                </li>
-                            @endcan
-
-                            @can('jobs-list')
-                                <li class="{{ Request::is('jobs*') ? 'active' : '' }}">
-                                    <a href="{{ route('jobs.index') }}" class="fsli"><img
-                                            src="{{ asset('Backend/assets/images/job.png') }}" alt="">
-                                        Jobs</a>
-                                </li>
-                            @endcan
-
-                            @can('orders-list')
-                                <li class="{{ Request::is('orders*') ? 'active' : '' }}">
-                                    <a href="{{ route('orders.index') }}" class="fsli"><img
-                                            src="{{ asset('Backend/assets/images/order.png') }}" alt="">
-                                        Orders</a>
-                                </li>
-                            @endcan
-
-                            {{-- @can('reports')
-                                <li class="{{ Request::is('reports*') ? 'active' : '' }}">
-                                    <a href="#" class="fsli"><img
-                                            src="{{ asset('Backend/assets/images/report.png') }}" alt="">
-                                        Reports</a>
-                                </li>
-                            @endcan --}}
-
-                            @can('users-list')
-                                <li class="{{ Request::is('users*') ? 'active' : '' }}"><a
-                                        href="{{ route('users.index') }}" class="fsli">
-                                        <img src="{{ asset('Backend/assets/images/user.png') }}" alt="">
-                                        Users</a>
-                                </li>
-                            @endcan
-
-                            @can('roles-list')
-                                <li class="{{ Request::is('roles*') ? 'active' : '' }}"><a
-                                        href="{{ route('roles.index') }}" class="fsli">
-                                        <img src="{{ asset('Backend/assets/images/roles.png') }}" alt="">
-                                        Roles</a>
-                                </li>
-                            @endcan
-
-
-                        </div>
-                    </ul>
-                    <div class="settings">
-                        <h4>SYSTEM</h4>
-                        {{-- <a href="#"><img src="{{ asset('Backend/assets/images/i.png') }}" alt="">Help
-                            Center</a>
-                        <a href="#"><img src="{{ asset('Backend/assets/images/setting.png') }}"
-                                alt="">Settings</a> --}}
-
-                        <a href="#"
-                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                            <img src="{{ asset('Backend/assets/images/log-out.png') }}" alt="">Logout
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-
-                        @if (session()->has('impersonated_by'))
-                            <a href="{{ route('impersonate.stop') }}" class="btn btn-sm btn-danger">
-                                Back to Admin
+    <div class="main-page">
+        <div class="sidebar-wrapper">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-logo">
+                    <img src="{{ asset('Backend/assets/images/logo-white.png') }}" alt="">
+                    <button id="closebar"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <ul>
+                    <div class="First_sec">
+                        <li class="{{ Request::is('home*') ? 'active' : '' }}">
+                            <a href="{{ route('home') }}" class="fsli d-flex align-items-center w-100">
+                                <img src="{{ asset('Backend/assets/images/dashboard.png') }}" alt="">
+                                <span class="ms-2">Dashboard</span>
                             </a>
-                        @endif
+                        </li>
+
+                        <li class="{{ Request::is('tickets*') ? 'active' : '' }}">
+                            <a href="{{ route('tickets.index') }}" class="fsli"><img
+                                    src="{{ asset('Backend/assets/images/ticket.png') }}" alt="">
+                                Tickets</a>
+                        </li>
+
+                        {{-- @can('invoice')
+                                <li class="{{ Request::is('invoices*') ? 'active' : '' }}">
+                        <a href="#" class="fsli"><img
+                                src="{{ asset('Backend/assets/images/invoice.png') }}" alt="">
+                            Invoices</a>
+                        </li>
+                        @endcan --}}
+
+                        {{-- @can('capabilities-list')
+                                <li class="{{ Request::is('capabilities*') ? 'active' : '' }}">
+                        <a href="{{ route('capabilities.index') }}" class="fsli"><img
+                                src=" {{ asset('Backend/assets/images/capability.png') }}" alt="">
+                            Capabilities</a>
+                        </li>
+                        @endcan --}}
+
+                        @can('company-list')
+                        <li class="{{ Request::is('companies*') ? 'active' : '' }}">
+                            <a href="{{ route('companies.index') }}" class="fsli"><img
+                                    src="{{ asset('Backend/assets/images/companies.png') }}" alt="">
+                                Companies</a>
+                        </li>
+                        @endcan
+
+                        {{-- @can('specialties-list')
+                                <li class="{{ Request::is('specialties*') ? 'active' : '' }}">
+                        <a href="{{ route('specialties.index') }}" class="fsli"><img
+                                src="{{ asset('Backend/assets/images/specialities.png') }}" alt="">
+                            Specialities</a>
+                        </li>
+                        @endcan --}}
+
+                        @can('trucks-list')
+                        <li class="has-submenu">
+                            <a href="javascript:void(0)" class="fsli">
+                                <img src="{{ asset('Backend/assets/images/truck.png') }}" alt="">
+                                Trucks <span class="submenu-toggle">›</span>
+                            </a>
+                            <ul class="submenu">
+                                <li><a href="{{ route('trucks.index') }}">Manage Trucks</a></li>
+                                <li><a href="{{ route('trailers.index') }}">Manage Trailers</a></li>
+                            </ul>
+                        </li>
+                        @endcan
+
+                        @can('jobs-list')
+                        <li class="{{ Request::is('jobs*') ? 'active' : '' }}">
+                            <a href="{{ route('jobs.index') }}" class="fsli"><img
+                                    src="{{ asset('Backend/assets/images/job.png') }}" alt="">
+                                Jobs</a>
+                        </li>
+                        @endcan
+
+                        @can('orders-list')
+                        <li class="{{ Request::is('orders*') ? 'active' : '' }}">
+                            <a href="{{ route('orders.index') }}" class="fsli"><img
+                                    src="{{ asset('Backend/assets/images/order.png') }}" alt="">
+                                Orders</a>
+                        </li>
+                        @endcan
+
+                        {{-- @can('reports')
+                                <li class="{{ Request::is('reports*') ? 'active' : '' }}">
+                        <a href="#" class="fsli"><img
+                                src="{{ asset('Backend/assets/images/report.png') }}" alt="">
+                            Reports</a>
+                        </li>
+                        @endcan --}}
+
+                        @can('users-list')
+                        <li class="{{ Request::is('users*') ? 'active' : '' }}"><a
+                                href="{{ route('users.index') }}" class="fsli">
+                                <img src="{{ asset('Backend/assets/images/user.png') }}" alt="">
+                                Users</a>
+                        </li>
+                        @endcan
+
+                        @can('roles-list')
+                        <li class="{{ Request::is('roles*') ? 'active' : '' }}"><a
+                                href="{{ route('roles.index') }}" class="fsli">
+                                <img src="{{ asset('Backend/assets/images/roles.png') }}" alt="">
+                                Roles</a>
+                        </li>
+                        @endcan
+
+
                     </div>
+                </ul>
+                <div class="settings">
+                    <h4>SYSTEM</h4>
+                    {{-- <a href="#"><img src="{{ asset('Backend/assets/images/i.png') }}" alt="">Help
+                    Center</a>
+                    <a href="#"><img src="{{ asset('Backend/assets/images/setting.png') }}"
+                            alt="">Settings</a> --}}
+
+                    <a href="#"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <img src="{{ asset('Backend/assets/images/log-out.png') }}" alt="">Logout
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+
+                    @if (session()->has('impersonated_by'))
+                    <a href="{{ route('impersonate.stop') }}" class="btn btn-sm btn-danger">
+                        Back to Admin
+                    </a>
+                    @endif
                 </div>
             </div>
         </div>
@@ -353,6 +343,19 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
     integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script>
+    let openBtn = document.querySelector('#openbar');
+    let closeBtn = document.querySelector('#closebar');
+    let sideBar = document.querySelector('.sidebar-wrapper');
+
+    openBtn.addEventListener('click', () => {
+        sideBar.classList.toggle('open');
+    })
+
+    closeBtn.addEventListener('click', () => {
+        sideBar.classList.toggle('open');
+    })
+</script>
 <script>
     const sidebar = document.getElementById('sidebar');
     const indicator = document.getElementById('indicator');
@@ -380,20 +383,20 @@
             "hideMethod": "fadeOut"
         };
 
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
+        @if(session('success'))
+        toastr.success("{{ session('success') }}");
         @endif
 
-        @if (session('error'))
-            toastr.error("{{ session('error') }}");
+        @if(session('error'))
+        toastr.error("{{ session('error') }}");
         @endif
 
-        @if (session('warning'))
-            toastr.warning("{{ session('warning') }}");
+        @if(session('warning'))
+        toastr.warning("{{ session('warning') }}");
         @endif
 
-        @if (session('info'))
-            toastr.info("{{ session('info') }}");
+        @if(session('info'))
+        toastr.info("{{ session('info') }}");
         @endif
     });
 </script>

@@ -6,12 +6,13 @@
 </style>
 @section('title', 'Tickets Management')
 @section('content')
-    <div class="col-md-10">
+    <div class="main">
         <section class="main-sec">
             <div class="seperater">
+            <button id="openbar"><i class="fa-solid fa-bars"></i></button>
                 <div class="main-head">
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 col-6">
                             <div class="pagetitle">
                                 <nav>
                                     <ol class="breadcrumb">
@@ -22,7 +23,7 @@
                                 </nav>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 col-6">
                             <div class="sm-header">
                                 <a href="#"><img src="{{ asset('Backend/assets/images/Group 38.png') }}"
                                         alt=""></a>

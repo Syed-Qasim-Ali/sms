@@ -13,20 +13,25 @@ body {
     background-position: center;
 }
 
+.sidebar-wrapper {
+    height: 100vh;
+    width: 16%;
+}
+
 .main-sec {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100vh;
+    height: 90vh;
 }
 
 .sign-field {
     width: 100%;
-    padding: 25px;
+    padding: 18px;
     margin-bottom: 10px;
     border: 0;
     border-radius: 50px;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .sign-field:focus {
@@ -40,19 +45,19 @@ body {
 }
 
 .submitbtn {
-    padding: 20px 60px;
+    padding: 18px 50px;
     border: 0;
     border-radius: 50px;
     background-color: #27AF60;
     box-shadow: 0px 0px 41px #27AF60;
-    font-size: 20px;
+    font-size: 16px;
     font-family: "Montserrat";
     color: white;
     margin-top: 20px;
 }
 
 .sign-in-form h4 {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 300;
     padding-bottom: 10px;
 }
@@ -69,7 +74,7 @@ body {
 }
 
 .signin {
-    width: 50%;
+    width: 40%;
     margin: auto;
 }
 
@@ -93,16 +98,16 @@ body {
 }
 
 .ca a {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 300;
 }
 
 .sign-in-form img {
-    width: 185px;
+    width: 130px;
 }
 
 .sidebar {
-    width: 215px;
+    width: 100%;
     height: 100%;
     transition: width 0.3s ease;
     overflow: hidden;
@@ -223,7 +228,7 @@ body {
     text-decoration: none;
     display: block;
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
 }
 
 .settings {
@@ -1041,3 +1046,288 @@ button.send-btn {
 }
 
 /* Driver Invitation - 8 Page */
+
+.has-submenu {
+    display: block !important;
+}
+
+.submenu li {
+    padding: 0 !important;
+    display: block !important;
+}
+
+.submenu {
+    position: absolute !important;
+    left: 100% !important;
+    border-radius: 0 !important;
+}
+
+.submenu li a:hover {
+    background: transparent linear-gradient(88deg, #47C97E 0%, #0C7237 100%) 0% 0% no-repeat padding-box;
+    color: #fff;
+}
+
+.main-page {
+    display: flex;
+    gap: 25px;
+}
+
+.main {
+    width: 84%;
+}
+
+#openbar {
+    background: transparent linear-gradient(88deg, #47C97E 0%, #0C7237 100%) 0% 0% no-repeat padding-box;
+    border: 0;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 0 25px 25px 0px;
+    display: none;
+}
+
+#closebar {
+    background: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    border-radius: 50%;
+    height: 35px;
+    width: 35px;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    margin-right: 20px;
+    display: none;
+}
+
+@media only screen and (max-width:767px) {
+    .sidebar-wrapper {
+        width: 55%;
+        position: fixed;
+        z-index: 1;
+        left: -70vw;
+        transition: 0.3s;
+    }
+
+    .settings a {
+        font-size: 14px;
+    }
+
+    .card-body {
+        overflow-x: scroll;
+    }
+
+    .settings h4 {
+        font-size: 16px;
+    }
+
+    .main-head {
+        margin-top: 50px;
+    }
+
+    #openbar {
+        display: block;
+    }
+
+    .sidebar-logo img {
+        width: 100px;
+    }
+
+    .sidebar-wrapper.open {
+        left: 0;
+    }
+
+    .sidebar-logo {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #closebar {
+        display: flex;
+    }
+
+    .main {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .main-page {
+        gap: 0;
+    }
+
+    .sm-header {
+        padding-right: 0;
+    }
+
+    .foot p {
+        font-size: 12px;
+        margin-top: 0;
+    }
+
+    .card-body h2 {
+        font-size: 20px;
+    }
+
+    .sm-header img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .order-count-badge {
+        font-size: 8px;
+        padding: 3px 6px;
+        transform: translate(10%, -30%);
+    }
+
+    .main-head .breadcrumb-item {
+        font-size: 12px;
+    }
+
+    .sign-in-form h2 {
+        font-size: 30px;
+    }
+
+    .sign-in-form h4 {
+        font-size: 14px;
+    }
+
+    .sign-in-form img {
+        width: 100px;
+    }
+
+    .signin {
+        width: 100%;
+    }
+
+    .sign-field {
+        font-size: 14px;
+    }
+
+    .forget a {
+        font-size: 14px;
+    }
+
+    .radio-box {
+        font-size: 14px;
+    }
+
+    .submitbtn {
+        padding: 16px 40px;
+        font-size: 14px;
+    }
+
+    .ca a {
+        font-size: 14px;
+    }
+
+    .main-sec-signin {
+        padding: 100px 10px 50px;
+    }
+
+    .eye {
+        position: absolute;
+        top: 18px;
+        right: 19px;
+    }
+
+    .table th {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (min-width:767px) and (max-width:1024px) {
+    .sign-in-form h2 {
+        font-size: 32px;
+    }
+
+    .sign-in-form h4 {
+        font-size: 16px;
+    }
+
+    .signin {
+        width: 70%;
+    }
+
+    .main-sec-signin {
+        padding: 75px 10px;
+    }
+
+    .sidebar-wrapper {
+        width: 25%;
+    }
+
+    .order-count-badge {
+        top: 5px;
+        right: 10px;
+        font-size: 10px;
+        padding: 4px 7px;
+    }
+
+    .breadcrumb {
+        font-size: 14px;
+    }
+
+    .sm-header img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .card-body h2 {
+        font-size: 20px;
+    }
+
+    .main {
+        width: 75%;
+    }
+
+    .settings h4 {
+        font-size: 18px;
+    }
+
+    .sidebar-logo {
+        padding: 10px 5px 10px;
+    }
+
+    .sidebar-logo img {
+        width: 100px;
+    }
+
+    .ca a {
+        font-size: 16px;
+    }
+
+    .ca {
+        padding-top: 65px;
+    }
+
+    .seperater {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100vh;
+    }
+
+    .card-body {
+        overflow-x: scroll;
+        height: 75vh;
+        overflow-y: scroll;
+    }
+
+    .foot p {
+        font-size: 14px;
+    }
+
+    .table th {
+        font-size: 12px;
+    }
+}
+
+html {
+    overflow-x: hidden;
+}
